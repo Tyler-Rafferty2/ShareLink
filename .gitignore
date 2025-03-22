@@ -1,6 +1,68 @@
+# Frontend (Node.js/React)
+# Node modules
+node_modules/
+
+# Build output
+/dist
+/build
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.bak
+*.swp
+
+
+# Backend (.NET/C#)
+# Build directories
 bin/
 obj/
-.vs/
+
+# User-specific files
 *.user
 *.suo
+*.userosscache
+*.sln.docstates
+
+# IDE and editor files
+.vs/
+.idea/
+
+# Temporary files
+*.log
+*.bak
+*.swp
+
+# Package directories
 packages/
+
+# Environment files (if any, like .env files for sensitive configurations)
+.env
+
+
+# Common
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/

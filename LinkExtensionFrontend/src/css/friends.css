@@ -1,0 +1,127 @@
+@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css";
+body {
+  display: block;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(#fff, #3c76b8);
+  font-family: "Lato", sans-serif;
+  width: 350px;
+  height: 230px;
+}
+
+h1 {
+  color: #3c76b8;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 100;
+  margin: 0 0 30px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;  /* Distributes space between the sections */
+    gap: 10px;  /* Adds space between the sections */
+    margin: 10px;
+  }
+  
+  .scrollable-list {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;  /* Stack items vertically */
+    overflow-y: auto;        /* Allow vertical scrolling */
+    max-height: 300px;       /* Set a max height to make the scroll effect visible */
+    gap: 5px;                /* Space between items */
+    /*padding: 10px;   */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.scrollable-list div {
+    display: flex;
+    justify-content: flex-start;  /* Align items to the left */
+    align-items: center;          /* Ensure buttons are aligned correctly */
+    background-color: #f0f0f0;
+    padding: 8px 15px;            /* Padding added for spacing inside each item */
+    border-radius: 5px;
+    width: 100%;                  /* Ensure each item takes up the full width */
+    box-sizing: border-box;      /* Include padding in width calculation */
+}
+
+
+.scrollable-list button {
+    margin-left: 10px;  /* Space between buttons */
+}
+
+ul {
+    list-style-type: none;  /* Removes bullets */
+    padding: 0;             /* Removes any default padding */
+    margin: 0;              /* Removes any default margin */
+}
+
+ul li {
+    display: flex;
+    justify-content: space-between;  /* Space between the item text and buttons */
+    align-items: center;
+    margin-bottom: 10px;    /* Optional: space between items */
+}
+
+
+
+.hidden {
+    display: none;  /* Hide the text by default */
+}
+
+
+.btn {
+  display: block;
+  border: 1px solid transparent;
+  height: 35px;
+  width: 100%;
+  border-radius: 5px;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  outline: none;
+  font-family: "Lato", sans-serif;
+  font-weight: 600;
+  margin: 0 0 30px;
+}
+.btn__color{
+  display: flex;
+  border: 0px transparent;
+  height: 50px;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn__sign_out {
+  background-color: #4285F4;
+  color: #fff;
+  font-size: 18px;
+}
+
+.btn__sign_out:hover {
+  background-color: #fff;
+  color: #4285F4;
+  border: 1px solid #4285F4;
+}
+
+#sign_out{
+  width: 100%;
+}
+
+@keyframes choosing {
+    100% {
+        transform: rotate(0deg) scale(1.5);
+        box-shadow: 0px 0px 20px 2px white; ;
+    }
+}
+
+#sign_out:hover {
+    animation-name: choosing;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-duration: 0.4s;
+}
