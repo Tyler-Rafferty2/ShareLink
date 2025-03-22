@@ -1,0 +1,248 @@
+public class User
+    {
+        [Key]
+        public string? email { get; set; }            // For email
+        public string? displayName { get; set; }      // For display name
+        public List<string> friends { get; set; }    // For friends list
+        public List<string> friendRequests { get; set; } // For friend requests
+        public List<string> friendRequestsSent { get; set; } // For sent friend requests
+        public DateTime CreatedAt { get; set; }      // To store creation date (optional)
+
+        // Constructor to initialize the lists to avoid null reference exceptions
+        public User()
+        {
+            friends = new List<string>();
+            friendRequests = new List<string>();
+            friendRequestsSent = new List<string>();
+        }
+    }
+
+
+    using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+using LinkExtensionBackend.Data;
+using LinkExtensionBackend.Models;
+using System.Runtime.CompilerServices;
+
+namespace LinkExtensionBackend.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase
+    {
+        private readonly AppDbContext _context;
+
+        public UserController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/User
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        // GET: api/User/displayName
+        [HttpGet("byDisplayName/{displayName}")]
+        public async Task<ActionResult<User>> GetUserByDisplayName(string displayName)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.displayName == displayName);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
+
+        // POST: api/User
+        [HttpPost]
+        public async Task<IActionResult> PostUser(User user)
+        {
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.email == user.email);
+
+            if (existingUser != null)
+            {
+                return Conflict(new { message = "User with this email already exists." });
+            }
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetUser), new { email = user.email }, user);
+        }
+
+
+        // PUT: api/User/displayName
+        [HttpPut("{displayName}")]
+        public async Task<IActionResult> PutUser(string displayName, User user)
+        {
+            if (displayName != user.displayName)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(displayName))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // PUT: api/user/addFriendRequest/{email}
+        [HttpPut("addFriendRequest/{email}")]
+        public async Task<IActionResult> AddFriendRequest(string email, [FromBody] string friendUser)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+
+            // Check if the user exists
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            // Here, you would append the friend request email to the user's FriendRequestSent list
+            if (!user.friendRequests.Contains(friendUser))
+            {
+                user.friendRequests.Add(friendUser);
+                await _context.SaveChangesAsync(); // Save changes to the database
+                return Ok(new { message = "Friend request sent successfully" });
+            }
+
+            return Ok(new { message = "Already sent request" });
+
+        }
+
+
+        // PUT: api/user/addFriendRequestSent/{email}
+        [HttpPut("addFriendRequestSent/{email}")]
+        public async Task<IActionResult> AddFriendRequestSent(string email, [FromBody] string friendUser)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+
+            // Check if the user exists
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            // Here, you would append the friend request email to the user's FriendRequestSent list
+            if (!user.friendRequestsSent.Contains(friendUser))
+            {
+                user.friendRequestsSent.Add(friendUser);
+                await _context.SaveChangesAsync(); // Save changes to the database
+                return Ok(new { message = "Friend request sent successfully" });
+            }
+
+            return Ok(new { message = "Already sent request" });
+
+        }
+
+        // PUT: api/user/addFriend/{email}
+        [HttpPut("addFriend/{email}")]
+        public async Task<IActionResult> AddFriend(string email, [FromBody] string friendUser)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            var userFriend = await _context.Users.FirstOrDefaultAsync(u => u.email == friendUser);
+
+            // Check if the user exists
+            if (user == null || userFriend == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            // Here, you would append the friend request email to the user's FriendRequestSent list
+            if (!user.friends.Contains(friendUser))
+            {
+                user.friends.Add(friendUser);
+                userFriend.friends.Add(email);
+                await _context.SaveChangesAsync(); // Save changes to the database
+                return Ok(new { message = "Friend request sent successfully" });
+            }
+
+            return Ok(new { message = "Already sent request" });
+
+        }
+
+        // PUT: api/user/removeRequest/{email}
+        [HttpPut("removeRequest/{email}")]
+        public async Task<IActionResult> RemoveRequest(string email, [FromBody] string friendUser)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            var userFriend = await _context.Users.FirstOrDefaultAsync(u => u.email == friendUser);
+
+            // Check if the user exists
+            if (user == null || userFriend == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            // Remove friendEmail from user's friendRequestsSent and friendRequests
+            user.friendRequestsSent?.Remove(friendUser);
+            user.friendRequests?.Remove(friendUser);
+
+            // Remove userEmail from userFriend's friendRequestsSent and friendRequests
+            userFriend.friendRequestsSent?.Remove(email);
+            userFriend.friendRequests?.Remove(email);
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Friend request removed successfully" });
+
+        }
+
+        // DELETE: api/User/displayName
+        [HttpDelete("{displayName}")]
+        public async Task<IActionResult> DeleteUser(string displayName)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.displayName == displayName);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpGet("{email}")]
+        public async Task<IActionResult> GetUser(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+
+        private bool UserExists(string displayName)
+        {
+            return _context.Users.Any(e => e.displayName == displayName);
+        }
+    }
+}
