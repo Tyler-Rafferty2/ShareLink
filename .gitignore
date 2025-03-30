@@ -30,6 +30,8 @@ Thumbs.db
 *.bak
 *.swp
 
+#Auth files
+/auth_config.json
 
 # Backend (.NET/C#)
 # Build directories
