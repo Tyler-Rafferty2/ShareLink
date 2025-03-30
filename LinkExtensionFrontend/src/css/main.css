@@ -6,7 +6,7 @@ body {
   background: linear-gradient(#fff, #3c76b8);
   font-family: "Lato", sans-serif;
   width: 350px;
-  height: 230px;
+  height: 300px;
 }
 
 h1 {
@@ -69,4 +69,24 @@ h1 {
     animation-direction: normal;
     animation-fill-mode: forwards;
     animation-duration: 0.4s;
+}
+
+.right-section {
+  width: 25%; /* Keep it 1/4th of the screen width */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left inside the section */
+  gap: 10px;
+  position: absolute;
+  left: 70%; /* Start at 3/4ths of the screen */
+}
+
+.left-section {
+  width: 50%; /* Keep it 1/4th of the screen width */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left inside the section */
+  gap: 5px;
+  position: absolute;
+  left: 5%; /* Start at 3/4ths of the screen */
 }

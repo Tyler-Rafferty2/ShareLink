@@ -10,13 +10,13 @@ module.exports = {
   // Using module bundlers we can add the required code for your extension
   // Any modular script should be added as entry point
   entry: {
-    firebase_config: './src/popup/firebase_config.js',
     popup: './src/popup/popup.js',
     createAccount: './src/popup/createAccount.js',
     main_script: './src/popup/main-script.js',
     options: './src/options/options.js',
     friends: './src/popup/friends.js',
-    links: './src/popup/links.js'
+    links: './src/popup/links.js',
+    createLink: './src/popup/createLink.js',
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
@@ -33,6 +33,11 @@ module.exports = {
       template: path.join(__dirname, "src", "popup", "createAccount.html"),
       filename: "createAccount.html",
       chunks: ["createAccount"] // This is script from entry point
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", "popup", "createLink.html"),
+      filename: "createLink.html",
+      chunks: ["createLink"] // This is script from entry point
     }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "options", "options.html"),

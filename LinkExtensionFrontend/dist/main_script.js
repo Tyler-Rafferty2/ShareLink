@@ -109,6 +109,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let auth0Client = null;
+let userId = null;
+let user = null;
 
 console.log("popup main!");
 
@@ -124,6 +126,8 @@ const configureClient = async () => {
 
 document.addEventListener("DOMContentLoaded", async () => {
     await configureClient();
+    user = await auth0Client.getUser();
+    userId = await getUserIdFromEmail(user.email);
     updateUI();
 
     // Auth0 login check
@@ -144,27 +148,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log('No user logged in');
     }
 
-    document.querySelector('#sign_out').addEventListener('click', async () => {
-        await auth0Client.logout({
-            returnTo: window.location.origin
-        });
-        window.location.replace('./popup.html');
-    });
 
     document.getElementById("friendsButton").addEventListener("click", function () {
         window.location.replace('./friends.html'); // Redirects to friends.html
     });
 
     document.getElementById("linksButton").addEventListener("click", function () {
-        window.location.replace('./links.html'); // Redirects to links.html
+        //window.location.replace('./links.html'); // Redirects to links.html
+        window.location.replace('./createAccount.html'); // Redirects to links.html
+    });
+
+    document.getElementById("createLinkButton").addEventListener("click", function () {
+        window.location.replace('./createLink.html'); // Redirects to links.html
     });
 });
 
 // Helper function to update UI based on login state
 const updateUI = async () => {
     const isAuthenticated = await auth0Client.isAuthenticated();
-    
-    if (isAuthenticated) {
+    await fetchAndUpdateText();
+    if (isAuthenticated) {  
         const user = await auth0Client.getUser();
         console.log("User authenticated");
     } else {
@@ -219,6 +222,59 @@ const checkIfUserExists = async (email) => {
         return false;
     }
 };
+
+const getUserIdFromEmail = async (email) => {
+    const url = `http://localhost:5000/api/user/byEmail/${email}`;
+    try {
+        const response = await fetch(url);
+
+        if (response.ok) {
+            // If user exists, response is 200 OK
+            const data = await response.json();
+            return data.id;  // Return just the user ID
+        } else if (response.status === 404) {
+            // If user doesn't exist, response is 404 Not Found
+            console.log('User not found');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error fetching user by email:', error);
+        return null;
+    }
+};
+
+function updateLinksList(links) {
+    const displayTextElement = document.getElementById("displayText");
+
+    // Clear previous content
+    displayTextElement.innerHTML = '';
+
+    // Iterate over each link in the array
+    links.forEach(link => {
+        // Assuming 'word' refers to the title or description (you can adjust this based on your needs)
+        const word = link.title; // You can change this to link.description if you prefer
+        
+        // Set the inner HTML to display the word and a clickable URL
+        displayTextElement.innerHTML += `${word} <a href="${link.url}" target="_blank">${link.url}</a><br>`;
+    });
+}
+
+
+async function fetchAndUpdateText() {
+    try {
+        const response = await fetch(`http://localhost:5000/api/link/linksList/${userId}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch text");
+        }
+        const data = await response.json(); // Assuming backend returns { word, url }
+        console.log("fetch", data);
+        await updateLinksList(data);
+    } catch (error) {
+        console.error("Error fetching text:", error);
+        await updateText("Error:", "#");
+    }
+}
+
 
 })();
 

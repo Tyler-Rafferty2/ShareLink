@@ -1,31 +1,18 @@
+<!--Make sure the form has the autocomplete function switched off:-->
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Account</title>
-    <link rel="stylesheet" href="createAccount.css" />
-  <script defer src="createAccount.js"></script></head>
-  <body>
-    <div class="container">
-      <h2 id="formTitle">Create Account</h2>
-      <form id="createAccountForm">
-        <input type="email" id="email" placeholder="Enter email" required />
-        <input
-          type="text"
-          id="displayName"
-          placeholder="Enter display name"
-          required
-        />
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter password"
-          required
-        />
-        <button id="submitButton" type="submit">Sign Up</button>
-      </form>
-      <button id="toggleForm">Already have an account? Login</button>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase + MV3 Sample</title>
+    <link rel="stylesheet" href="./src/css/createAccount.css">
+<script defer src="createAccount.js"></script></head>
+</body>
+
+  <form autocomplete="off" action="/action_page.php">
+    <div class="autocomplete" style="width: 300px">
+      <input id="myInput" type="text" name="myCountry" placeholder="Country" />
     </div>
-  </body>
-</html>
+    <input type="submit" />
+  </form>
+
+</body>

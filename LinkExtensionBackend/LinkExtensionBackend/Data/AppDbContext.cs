@@ -12,6 +12,7 @@ namespace LinkExtensionBackend.Data  // Change this to your actual namespace
         // Define DbSet properties for your entities (tables)
         public DbSet<User> Users { get; set; }  // Represents the Users table
 
+        public DbSet<Link> Links { get; set; } // Represents the Links Table
         // Optionally, override OnModelCreating for additional configuration
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
