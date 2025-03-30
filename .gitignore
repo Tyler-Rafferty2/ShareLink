@@ -3,8 +3,8 @@
 node_modules/
 
 # Build output
-/dist
-/build
+frontend/dist
+frontend/build
 
 # Log files
 npm-debug.log*
@@ -31,7 +31,7 @@ Thumbs.db
 *.swp
 
 #Auth files
-/auth_config.json
+frontend/auth_config.json
 
 # Backend (.NET/C#)
 # Build directories
